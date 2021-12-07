@@ -1,4 +1,4 @@
-# youya-mall-ts-ht
+# vue3+ts
 
 ## Project setup
 ```
