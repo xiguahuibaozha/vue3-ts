@@ -1,24 +1,46 @@
 import { StoreOptions } from 'vuex'
-import { getMenu } from "@/api/app";
-import { setLocalStorage,getLocalStorage } from "@/util/storage";
+import { login, loginOut } from "@/api/app"
+import { getLocalStorage, setLocalStorage, removeLocalStorage } from "@/util/storage"
+import router from '@/router'
+import { defaultRouter } from '@/router/routers'
 
 export default <StoreOptions<{[name:string]:any}>>{
     namespaced: true,
     state: {
-        menuList: getLocalStorage('menuList')
+        token: getLocalStorage('token'),
+        // 返回登陆页面时缓存上一个页面的path
+        redirect: defaultRouter?.path,
+        userInfo: getLocalStorage('userInfo')??{}
     },
     mutations: {
-        GET_MENULIST(state){
+        // 登录
+        LOGIN(state, params){
             // 获取路由列表
-            getMenu().then(({data}) => {
-                state.menuList = data
-                setLocalStorage("menuList",data)
+            login(params).then(({data}) => {
+                setLocalStorage('token',data)
+                setLocalStorage('userInfo',{username:params.username})
+                state.token = data
+                state.userInfo = {username:params.username}
+                router.push(state.redirect)
+            })
+        },
+        // 退出登录
+        LOGIN_OUT(state){
+            loginOut().then(() => {
+                removeLocalStorage('token')
+                removeLocalStorage('userInfo')
+                state.token = null
+                state.userInfo = {}
+                router.push('/login')
             })
         }
     },
     actions: {
-        getMenuList({ commit }){
-            commit("GET_MENULIST")
+        login({ commit },params){
+            commit("LOGIN", params)
+        },
+        loginOut({ commit }){
+            commit("LOGIN_OUT")
         }
     }
 }

@@ -1,0 +1,28 @@
+@mixin input {
+    background-color: $DISEHUI;
+    border: 0px;
+    border-bottom: 2px solid $ASIDEHUISE;
+    border-radius: 0px;
+}
+
+:deep(.el-input-group__prepend) {
+    @include input;
+}
+
+:deep(.el-form-item__content) {
+    min-width: 250px;
+}
+
+:deep(.el-input__inner) {
+    @include input;
+}
+
+:deep(.el-input__count-inner) {
+    background-color: $DISEHUI;
+}
+
+:deep(.el-button) {
+    width: 400px;
+    height: 40px;
+    border-radius: 8px;
+}

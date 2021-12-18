@@ -1,6 +1,7 @@
+import { StoreOptions } from 'vuex'
 import settings from "@/settings"
 
-export default {
+export default <StoreOptions<{[name:string]:any}>>{
     namespaced: true,
     state: {
         ...settings

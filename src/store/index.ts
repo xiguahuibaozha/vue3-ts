@@ -14,7 +14,7 @@ export default createStore<{[name:string]:any}>({
     }
   },
   actions: {
-    changeState({commit},data){
+    changeState({commit},data:[string,any]){
       commit("CHANGE_STATE",data)
     }
   },

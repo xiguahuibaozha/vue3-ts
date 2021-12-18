@@ -5,9 +5,14 @@ type RouterMap = {
 }
 
 const map:RouterMap = {
-    "menu01": () => import("@/views/pages/menu01/index.vue"),
-    "menu02": () => import("@/views/pages/menu02/index.vue"),
-    "menu03": () => import("@/views/pages/menu03/index.vue")
+    "userManage": () => import("@/views/userModule/userManage/index.vue"),
+    "dynamicManage": () => import("@/views/dynamicModule/dynamicManage/index.vue"),
+    "storeManage": () => import("@/views/storeModule/storeManage/index.vue"),
+    "storeEdit": () => import("@/views/storeModule/storeEdit/index.vue"),
+    "goodsManage": () => import("@/views/goodsModule/goodsManage/index.vue"),
+    "goodsEdit": () => import("@/views/goodsModule/goodsEdit/index.vue"),
+    "typeManage": () => import("@/views/goodsModule/typeManage/index.vue"),
+    "typeEdit": () => import("@/views/goodsModule/typeEdit/index.vue"),
 }
 
 export default (file:string) => {

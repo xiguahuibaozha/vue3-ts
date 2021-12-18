@@ -2,66 +2,50 @@
   <div class="aside">
     <div class="logo">
       <el-icon :size="30"><place /></el-icon>
-      <span v-if="!isCollapse">{{ title }}</span>
+      <span :style="{
+        opacity: isCollapse?'0':'1'
+      }">{{ title }}</span>
     </div>
     <el-menu
-      default-active="2"
-      class="el-menu-vertical-demo"
+      :default-active="defaultActive"
       :collapse="isCollapse"
-      @open="handleOpen"
-      @close="handleClose"
+      :router="true"
     >
-      <el-sub-menu index="1">
-        <template #title>
-          <el-icon :size="iconSize">
-            <component :is="'location'"></component>
-          </el-icon>
-          <span>Navigator One</span>
-        </template>
-        <el-menu-item index="1-1">item one</el-menu-item>
-        <el-menu-item index="1-2">item two</el-menu-item>
-        <el-menu-item index="1-3">item three</el-menu-item>
-        <el-sub-menu index="1-4">
-          <template #title><span>item four</span></template>
-          <el-menu-item index="1-4-1">item one</el-menu-item>
-        </el-sub-menu>
-      </el-sub-menu>
-      <el-menu-item index="2">
-        <template #title>Navigator Two</template>
-      </el-menu-item>
-      <el-menu-item index="3">
-        <el-icon :size="iconSize"><document /></el-icon>
-        <template #title>Navigator Three</template>
-      </el-menu-item>
-      <el-menu-item index="4">
-        <el-icon :size="iconSize"><setting /></el-icon>
-        <template #title>Navigator Four</template>
-      </el-menu-item>
+      <Menu v-for="(item,i) in otherRouters" :key="i" :item="item"></Menu>
     </el-menu>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from "vue";
-import { useStore } from "vuex";
+import { defineComponent, computed, ref, watch } from "vue";
+import { useStore } from "vuex"
+import Menu from "./Menu.vue"
+import { useRoute } from "vue-router"
+import { otherRouters } from "@/router/routers"
 
 export default defineComponent({
+  components:{
+    Menu
+  },
   setup() {
-    const { state } = useStore();
+    const route = useRoute()
 
-    const handleOpen = (key:string, keyPath:string[]) => {
-      console.log(key, keyPath)
-    }
-    const handleClose = (key:string, keyPath:string[]) => {
-      console.log(key, keyPath)
-    }
+    const defaultActive = ref<string>(route.path)
+
+    watch(route, (val) => {
+      if(!val.meta.hidden){
+        defaultActive.value = route.path
+      }
+    })
+
+    const { state } = useStore()
 
     return {
       title: computed(() => state.settings.title),
       isCollapse: computed(() => state.layout.showAsideMenu),
-      iconSize: computed(() => state.layout.iconSize),
-      handleOpen,
-      handleClose
+      timeout: computed(() => state.layout.timeout),
+      defaultActive,
+      otherRouters
     };
   },
 });
@@ -72,6 +56,7 @@ export default defineComponent({
   text-align: left;
   display: flex;
   align-items: center;
+  color: $ZHENZHUHUI;
 
   .el-icon{
     margin-right: 15px;
@@ -79,25 +64,48 @@ export default defineComponent({
 }
 
 .aside {
+  background-color: $ASIDEHUISE;
+  color: $ZHENZHUHUI;
+
   .logo {
     font-family: "FZNHT";
     font-size: 20px;
     padding: 20px;
     display: flex;
     align-items: center;
-    justify-content: space-around;
+    justify-content: space-between;
+    cursor: pointer;
+    width: 180px;
+
+    span{
+      transition: all v-bind('timeout');
+      width: 80%;
+    }
   }
 
   :deep(.el-menu){
     border: none;
+    background-color: $ASIDEHUISE;
   }
 
   :deep(.el-sub-menu__title){
     @include menu;
   }
+  :deep(.el-sub-menu__title:hover){
+    background-color: $JINGYVHUI;
+  }
+
+  :deep(.el-menu-item:hover){
+    background-color: $JINGYVHUI;
+  }
+
 
   :deep(.el-menu-item){
     @include menu;
+  }
+
+  :deep(.is-active){
+    color: $GULAN;
   }
 }
 </style>

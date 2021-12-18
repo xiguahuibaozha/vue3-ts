@@ -1,23 +1,38 @@
 import axios from "axios"
 import * as storage from "./storage"
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElLoading, ILoadingInstance } from 'element-plus'
+import router from '@/router'
+import { ResponseMessage } from "@/api/index"
 
-const env = process.env
-
-const jwt = storage.getLocalStorage("jwt")
+// const token = storage.getLocalStorage("token")
 
 const instance = axios.create({
-    baseURL: env.VUE_APP_BASE_API,
+    baseURL: process.env.VUE_APP_BASE_URL,
+    // headers: {
+    //     "content-type": "application/json"
+    // },
     timeout: 5000 //超时时间
 });
 
+// 正在执行的请求
+let loadingRequest:string[] = []
+// 请求接口时展示全屏的遮罩层
+let elLoading:ILoadingInstance|null = null
+
 // Add a request interceptor
 instance.interceptors.request.use((config) => {
-    // Do something before request is sent
+    elLoading = ElLoading.service({
+        lock: false,
+        text: 'Loading',
+        background: 'rgba(0, 0, 0, 0.7)',
+    })
 
-    if(jwt){
-        config.headers['jwt'] = jwt
+    if(config.url){
+        loadingRequest.push(config.url)
     }
+    // Do something before request is sent
+    // 设置token
+    config.headers['token'] = storage.getLocalStorage("token")
 
     return config;
 }, function (error) {
@@ -26,25 +41,38 @@ instance.interceptors.request.use((config) => {
 });
 
 // Add a response interceptor
-instance.interceptors.response.use(function (response) {
-    // Do something with response data
-
-    const code = response.data.code
-
-    if(code === 200){
-        return response.data;
-    }else{
-        ElMessage({
-            type: "error",
-            message: response.data.msg || "请求超时"
-        })
-        return Promise.reject(response);
+instance.interceptors.response.use((response) => {
+    // 移除完成的请求
+    loadingRequest = loadingRequest.filter(item => {
+        return !(item === response.config.url)
+    })
+    // 请求全部完成后关闭遮罩层
+    if(loadingRequest.length === 0){
+        elLoading?.close()
     }
-}, function (error) {
+
+    // Do something with response data
+    const code = response.data.code
+    if(code === 200){
+        ResponseMessage(response)
+        return response.data;
+    }else if(code === 401){
+        router.push("/login")
+    }else if(code === 400){
+        router.push("/login")
+    }
+    ElMessage({
+        type: "error",
+        message: response.data.msg || "登陆失效"
+    })
+    return Promise.reject(response);
+}, (error) => {
+    // 请求报错时隐藏遮罩层
+    elLoading?.close()
     // Do something with response error
     ElMessage({
         type: "error",
-        message: "请求超时"
+        message: "服务器错误"
     })
     return Promise.reject(error);
 });

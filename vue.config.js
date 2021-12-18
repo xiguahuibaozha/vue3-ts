@@ -1,10 +1,6 @@
 'use strict'
 const path = require('path')
 
-const title = "VUE3+TS"
-
-const port = 8080
-
 // 配置都能在这里找到 https://cli.vuejs.org/zh/config/#pages
 module.exports = {
     publicPath: '/',
@@ -18,7 +14,7 @@ module.exports = {
     productionSourceMap: false,
     devServer: {
         // 端口
-        port: port,
+        port: 8080,
         // 服务器启动自动打开浏览器
         open: true,
         // 当出现编译错误或警告时，在浏览器中显示全屏覆盖。
@@ -28,12 +24,12 @@ module.exports = {
             warnings: false,
         },
         proxy: {
-            "lbt":{
-                target: "http://127.0.0.1:3000/mock/11",
-                changeOrigin: true,
-                // pathRewrite: {
-                //     '^seovx': ''
-                // }
+            '/test': {
+                target: 'http://192.168.1.197:20000',
+                changeOrigin: true, // 开启代理
+                pathRewrite: {
+                    '^/up':''
+                }
             }
         }
     },
@@ -52,13 +48,14 @@ module.exports = {
             }
         }
     },
-    chainWebpack(config){
-        // 设置项目title
-        config.plugin('html').tap(args => {
-            args.forEach(item => {
-                item.title = title
-            })
-            return args
-        })
+    chainWebpack: config => {
+        const dir = path.resolve(__dirname, 'src/icons/svgs')  //确定icon所在的目录
+        config.module  //config是vue把webpack的API封装暴露给我们的一个对象，让我们使用
+          .rule('svg-sprite')  //添加一个规则
+          .test(/\.svg$/)  //文件匹配正则就用上面的规则
+          .include.add(dir).end() //规则只包含icons目录
+          .use('svg-sprite-loader'/*使用svg-sprite-loader*/).loader('svg-sprite-loader').options({ extract: false }/*不要解析出文件*/).end()
+        config.plugin('svg-sprite').use(require('svg-sprite-loader/plugin')), [{ pluginSprite: true }]//配置插件
+        config.module.rule('svg').exclude.add(dir)//其他svg loader排除 icons目录
     }
 }
