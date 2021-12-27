@@ -34,7 +34,7 @@ export const otherRouters: Array<RouteRecordRaw> = [
                 icon: 'svg-dashboard'
             }
         }]
-    },{
+    }, {
         path: '/userModule',
         component: Layout,
         name: 'userModule',
@@ -49,8 +49,15 @@ export const otherRouters: Array<RouteRecordRaw> = [
             meta: {
                 title: '用户管理'
             }
+        }, {
+            path: '/levelManage',
+            name: 'levelManage',
+            component: _import("levelManage"),
+            meta: {
+                title: '等级管理'
+            }
         }]
-    },{
+    }, {
         path: '/dynamicModule',
         component: Layout,
         name: 'dynamicModule',
@@ -65,14 +72,22 @@ export const otherRouters: Array<RouteRecordRaw> = [
             meta: {
                 title: '动态管理'
             }
+        }, {
+            path: '/dynamicDetail',
+            name: 'dynamicDetail',
+            component: _import("dynamicDetail"),
+            meta: {
+                title: '动态详情',
+                hidden: true
+            }
         }]
-    },{
+    }, {
         path: '/storeModule',
         component: Layout,
         name: 'storeModule',
         redirect: '/storeModule',
         meta: {
-            title: '门店模块'
+            title: '门店仓库模块'
         },
         children: [{
             path: '/storeManage',
@@ -81,7 +96,7 @@ export const otherRouters: Array<RouteRecordRaw> = [
             meta: {
                 title: '门店管理'
             }
-        },{
+        }, {
             path: '/storeEdit',
             name: 'storeEdit',
             component: _import("storeEdit"),
@@ -89,8 +104,23 @@ export const otherRouters: Array<RouteRecordRaw> = [
                 title: '门店编辑',
                 hidden: true
             }
+        }, {
+            path: '/warehouseManage',
+            name: 'warehouseManage',
+            component: _import("warehouseManage"),
+            meta: {
+                title: '仓库管理'
+            }
+        }, {
+            path: '/warehouseEdit',
+            name: 'warehouseEdit',
+            component: _import("warehouseEdit"),
+            meta: {
+                title: '仓库编辑',
+                hidden: true
+            }
         }]
-    },{
+    }, {
         path: '/goodsModule',
         component: Layout,
         name: 'goodsModule',
@@ -105,7 +135,7 @@ export const otherRouters: Array<RouteRecordRaw> = [
             meta: {
                 title: '商品管理'
             }
-        },{
+        }, {
             path: '/goodsEdit',
             name: 'goodsEdit',
             component: _import("goodsEdit"),
@@ -113,14 +143,14 @@ export const otherRouters: Array<RouteRecordRaw> = [
                 title: '商品编辑',
                 hidden: true
             }
-        },{
+        }, {
             path: '/typeManage',
             name: 'typeManage',
             component: _import("typeManage"),
             meta: {
                 title: '类型管理'
             }
-        },{
+        }, {
             path: '/typeEdit',
             name: 'typeEdit',
             component: _import("typeEdit"),
@@ -128,21 +158,68 @@ export const otherRouters: Array<RouteRecordRaw> = [
                 title: '编辑类型',
                 hidden: true
             }
-        },]
+        }]
+    }, {
+        path: '/activityModule',
+        component: Layout,
+        name: 'activityModule',
+        redirect: '/activityManage',
+        meta: {
+            title: '活动模块'
+        },
+        children: [{
+            path: '/activityManage',
+            name: 'activityManage',
+            component: _import("activityManage"),
+            meta: {
+                title: '活动管理'
+            }
+        }, {
+            path: '/activityEdit',
+            name: 'activityEdit',
+            component: _import("activityEdit"),
+            meta: {
+                title: '活动编辑',
+                hidden: true
+            }
+        }]
+    }, {
+        path: '/orderModule',
+        component: Layout,
+        name: 'orderModule',
+        redirect: '/orderManage',
+        meta: {
+            title: '订单模块'
+        },
+        children: [{
+            path: '/orderManage',
+            name: 'orderManage',
+            component: _import("orderManage"),
+            meta: {
+                title: '订单管理'
+            }
+        }, {
+            path: '/orderDetail',
+            name: 'orderDetail',
+            component: _import("orderDetail"),
+            meta: {
+                title: '订单详情'
+            }
+        }]
     }
 ]
 
 // 获取默认的router
-const getDefaultRouter = (routers:Array<RouteRecordRaw> = otherRouters) => {
+const getDefaultRouter = (routers: Array<RouteRecordRaw> = otherRouters) => {
     const item = routers[0]
-    if(item.children && item.children.length > 0){
+    if (item.children && item.children.length > 0) {
         getDefaultRouter(item.children)
-    }else {
+    } else {
         return item
     }
 }
 
 // 首次进入页面显示的route name
-export const defaultRouter:RouteRecordRaw|undefined = getDefaultRouter()
+export const defaultRouter: RouteRecordRaw | undefined = getDefaultRouter()
 
-export const routes = [...whiteRoutes,...otherRouters]
+export const routes = [...whiteRoutes, ...otherRouters]

@@ -5,6 +5,11 @@
     border-radius: 0px;
 }
 
+@mixin crease {
+    border: 0px;
+    background-color: $DISEHUI;
+}
+
 :deep(.el-input-group__prepend) {
     @include input;
 }
@@ -25,4 +30,12 @@
     width: 400px;
     height: 40px;
     border-radius: 8px;
+}
+
+:deep(.el-input-number__decrease) {
+    @include crease;
+}
+
+:deep(.el-input-number__increase) {
+    @include crease;
 }

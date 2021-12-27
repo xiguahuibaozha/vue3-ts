@@ -40,7 +40,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent, onMounted, ref } from "vue";
 import Parallax from "parallax-js";
 import { useStore } from "vuex";
@@ -54,7 +54,7 @@ export default defineComponent({
   setup() {
     const scene = ref(null);
 
-    const loginForm = ref({ username: "root", password: "root" });
+    const loginForm = ref({ username: "admin", password: "admin" });
 
     onMounted(() => {
       new Parallax(scene.value, {

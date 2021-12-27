@@ -9,7 +9,7 @@ export const goodsTypeList = (params?:Params):Promise<AxiosResponse<PageResult>>
 }
 
 // 分页
-export const goodsTypePage = (params?:Params):Promise<AxiosResponse<PageResult>> => {
+export const goodsTypePage = (params?:PageParams):Promise<AxiosResponse<PageResult>> => {
     return reuqest.get("/manage/type/page",{
         params
     })

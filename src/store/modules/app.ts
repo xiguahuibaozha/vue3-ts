@@ -4,28 +4,28 @@ import { getLocalStorage, setLocalStorage, removeLocalStorage } from "@/util/sto
 import router from '@/router'
 import { defaultRouter } from '@/router/routers'
 
-export default <StoreOptions<{[name:string]:any}>>{
+export default <StoreOptions<{ [name: string]: any }>>{
     namespaced: true,
     state: {
         token: getLocalStorage('token'),
         // 返回登陆页面时缓存上一个页面的path
         redirect: defaultRouter?.path,
-        userInfo: getLocalStorage('userInfo')??{}
+        userInfo: getLocalStorage('userInfo') ?? {}
     },
     mutations: {
         // 登录
-        LOGIN(state, params){
+        LOGIN(state, params) {
             // 获取路由列表
-            login(params).then(({data}) => {
-                setLocalStorage('token',data)
-                setLocalStorage('userInfo',{username:params.username})
+            login(params).then(({ data }) => {
+                setLocalStorage('token', data)
+                setLocalStorage('userInfo', { username: params.username })
                 state.token = data
-                state.userInfo = {username:params.username}
+                state.userInfo = { username: params.username }
                 router.push(state.redirect)
             })
         },
         // 退出登录
-        LOGIN_OUT(state){
+        LOGIN_OUT(state) {
             loginOut().then(() => {
                 removeLocalStorage('token')
                 removeLocalStorage('userInfo')
@@ -36,10 +36,10 @@ export default <StoreOptions<{[name:string]:any}>>{
         }
     },
     actions: {
-        login({ commit },params){
+        login({ commit }, params) {
             commit("LOGIN", params)
         },
-        loginOut({ commit }){
+        loginOut({ commit }) {
             commit("LOGIN_OUT")
         }
     }

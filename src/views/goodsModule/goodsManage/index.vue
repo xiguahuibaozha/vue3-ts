@@ -110,6 +110,7 @@ export default defineComponent({
 
     const handleSizeChange = (size: number) => {
       filterForm.value.pageSize = size;
+      filterForm.value.currentPage = 1
       getList();
     };
 
@@ -142,7 +143,6 @@ export default defineComponent({
     const remoteMethod = async (keyword:string) => {
       goodsTypeloading.value = true
       await goodsTypeList({keyword}).then(({data}) => {
-        console.log(data)
         goodsTypeOptions.value = data
       })
       goodsTypeloading.value = false

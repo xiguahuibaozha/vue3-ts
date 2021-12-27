@@ -44,12 +44,9 @@ const fileUploadSuccess = (response: MyResponse) => {
 };
 
 const saveBtn = () => {
-  console.log(formData.value);
   // 拥有id则为修改
   if (route.query.id) {
-    goodsTypeUpdate(formData.value).then((res) => {
-      console.log(res);
-    });
+    goodsTypeUpdate(formData.value)
   } else {
     goodsTypeAdd(formData.value).then(() => {
       router.back();

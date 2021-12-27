@@ -1,9 +1,16 @@
 import reuqest from '@/util/axios'
 import { AxiosResponse } from "axios"
 
-// 查看用户列表
+// 查看用户分页
 export const userPage = (params:PageParams):Promise<AxiosResponse<PageResult>> => {
     return reuqest.get("/manage/user",{
+        params
+    })
+}
+
+// 查看用户列表
+export const userList = (params:Params):Promise<AxiosResponse> => {
+    return reuqest.get("/manage/user/list",{
         params
     })
 }

@@ -1,16 +1,11 @@
 <template>
   <div class="item">
-    <el-image
-      fit="cover"
-      :src="'https://api.yimian.xyz/img?type=moe&time=' + new Date().getTime()"
-      :preview-src-list="[]"
-      :initial-index="0"
-      lazy
-    >
-      <template #placeholder>
-        <div class="image-slot"></div>
-      </template>
-    </el-image>
+    <ImageEl
+      style="width: 70px;height:70px;"
+      :src="getGoodsFileImage()"
+      :previewList="[]"
+      :initialIndex="0"
+    ></ImageEl>
 
     <div class="item-center">
       <div class="name">
@@ -30,13 +25,16 @@
 
         <span @click="btnHandle('edit', item.id, item)">编辑</span>
 
-        <el-popconfirm title="确定要删除这件商品吗？" @confirm="btnHandle('delete', item.id, item)">
+        <el-popconfirm
+          title="确定要删除这件商品吗？"
+          @confirm="btnHandle('delete', item.id, item)"
+        >
           <template #reference>
             <span>删除</span>
           </template>
         </el-popconfirm>
       </div>
-      <span class="status">{{ goodsState[item.state] }}</span>
+      <span class="status">{{ goodsConstant.goodsState[item.state] }}</span>
       <span class="time">{{ item.updateTime }}</span>
     </div>
   </div>
@@ -44,17 +42,31 @@
 
 <script lang="ts" setup>
 import { goodsConstant } from "@/util/constant";
+import ImageEl from "@/components/ImageEl/index.vue";
+import { JSONParse } from "@/util/utils";
+import { useStore } from "vuex"
 
-defineProps({
+const props = defineProps({
   item: {
     type: Object,
     default() {
       return {};
     },
-  },
+  }
 });
 
-const { goodsState } = goodsConstant;
+const { state } = useStore();
+const imgUrl = state.settings.imgUrl;
+
+// 获取商品首图
+const getGoodsFileImage = () => {
+  const file = JSONParse(props.item.goodsFile)
+  if(file.images){
+    return imgUrl + "/" + file.images
+  }else {
+    return ""
+  }
+}
 
 // 默认按钮点击事件
 const emit = defineEmits(["handle"]);
@@ -75,22 +87,6 @@ const btnHandle = (name: string, value: any, item: any) => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-
-  :deep(.el-image) {
-    width: 19%;
-    height: 70px;
-    border: 1px solid $BORDERHUI;
-    border-radius: 3px;
-
-    .image-slot {
-      font-size: 10px;
-      color: $FONTHUI;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: space-around;
-    }
-  }
 
   &-center {
     width: 30%;

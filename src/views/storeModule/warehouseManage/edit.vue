@@ -1,15 +1,13 @@
 <template>
   <div class="edit">
     <el-form label-position="top" :model="formData" class="demo-form-inline">
-      <el-form-item label="门店名">
+      <el-form-item label="仓库编号">
         <el-input
-          v-model="formData.storeName"
-          maxlength="14"
-          show-word-limit
+          v-model="formData.warehouseNo"
           placeholder="请输入"
         ></el-input>
       </el-form-item>
-      <el-form-item label="联系方式">
+      <el-form-item label="联系电话">
         <el-input
           v-model="formData.phone"
           maxlength="11"
@@ -35,19 +33,28 @@
       </el-form-item>
 
       <el-form-item label="详细地址">
-        <el-input v-model="formData.shopAddress" placeholder="请输入">
+        <el-input v-model="formData.detailedAddress" placeholder="请输入">
           <template #prepend>
             {{ formData.province + formData.city + formData.area || "请先选择地址" }}
           </template>
         </el-input>
         <div style="font-size: 12px">
           {{ formData.province + formData.city + formData.area || ""
-          }}{{ formData.shopAddress || "" }}
+          }}{{ formData.detailedAddress || "" }}
         </div>
       </el-form-item>
 
+      <el-form-item label="描述">
+        <el-input
+          v-model="formData.remark"
+          placeholder="请输入"
+          show-word-limit
+          type="textarea"
+        ></el-input>
+      </el-form-item>
+
       <el-form-item label="状态">
-        <el-switch v-model="formData.status" :active-value="0" :inactive-value="1" active-text="启用" inactive-text="禁用"/>
+        <el-switch v-model="formData.status" :active-value="1" :inactive-value="0" active-text="正常" inactive-text="禁用"/>
       </el-form-item>
 
       <el-form-item>
@@ -60,7 +67,7 @@
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
 import { initAMap } from "@/util/aMap";
-import { storeAdd, storeDetail, storeUpdate } from "@/api/storeModule/store";
+import { warehouseAdd, warehouseDetail, warehouseUpdate } from "@/api/storeModule/warehouse";
 import { useRoute } from "vue-router";
 
 const { query } = useRoute();
@@ -69,21 +76,23 @@ const formData = ref<Params>({
   province: null, //所在省
   city: null, //所在市
   area: null, //所在区
-  shopAddress: null, //详细地址
+  detailedAddress: null, //详细地址
   latitude: null, //纬度
   longitude: null, //经度
-  status: 0, //禁用状态(0:正常|1禁用)
-  storeName: null, //店铺名称
+  status: 1, //禁用状态(0:禁用|1正常)
+  // storeName: null, //店铺名称
   phone: null, //联系电话
+  remark: null, //描述
+  warehouseNo: null
 });
 
 const searchKeyWord = ref<string>();
 
 const saveBtn = () => {
   if (formData.value.id) {
-    storeUpdate(formData.value);
+    warehouseUpdate(formData.value);
   } else {
-    storeAdd(formData.value).then(({ data }) => {
+    warehouseAdd(formData.value).then(({ data }) => {
       formData.value = data;
     });
   }
@@ -103,7 +112,7 @@ onMounted(() => {
       let marker: any = null;
 
       if (query.id) {
-        storeDetail(Number(query.id)).then(({ data }) => {
+        warehouseDetail(Number(query.id)).then(({ data }) => {
           formData.value = data;
 
           // 通过id判断是否存在详情，有则定位到目标位置
@@ -119,7 +128,7 @@ onMounted(() => {
             };
             map.setCenter(lnglat);
             marker.setPosition(lnglat);
-            marker.setTitle(formData.value.shopAddress);
+            marker.setTitle(formData.value.detailedAddress);
           }
         });
       }
@@ -144,7 +153,7 @@ onMounted(() => {
             province: addressComponent.province, //所在省
             city: addressComponent.city, //所在市
             area: addressComponent.district, //所在区
-            shopAddress:
+            detailedAddress:
               addressComponent.street +
               addressComponent.township +
               (searchKeyWord.value ?? ""), //详细地址
@@ -152,13 +161,12 @@ onMounted(() => {
             longitude: String(lnglat.R), //经度
           };
           // 设置标点
-          creatMarker(lnglat, formData.value.shopAddress);
+          creatMarker(lnglat, formData.value.detailedAddress);
         });
       };
 
       // 监听map点击事件
       map.on("click", (e: any) => {
-        console.log(e.lnglat);
         searchKeyWord.value = "";
         // 逆编码地址
         getFormData(e.lnglat);

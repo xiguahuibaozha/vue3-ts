@@ -3,9 +3,9 @@
     <slot name="form"></slot>
   </div>
   <div class="content">
-    <div class="table-box">
-      <slot name="table"></slot>
-    </div>
+    <el-scrollbar height="100%" class="table-box">
+        <slot name="table"></slot>
+    </el-scrollbar>
 
     <div class="pagination">
       <slot name="pagination"></slot>
@@ -14,18 +14,18 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, onMounted } from 'vue'
+import { ref, onMounted } from "vue";
 
-  const header = ref<Element>()
+const header = ref<Element>();
 
-  const headerHight = ref<string>()
+const headerHight = ref<string>();
 
-  onMounted(() => {
-    headerHight.value = header.value?.clientHeight+'px'
-    window.addEventListener("resize", () => {
-      headerHight.value = header.value?.clientHeight+'px'
-    })
-  })
+onMounted(() => {
+  headerHight.value = header.value?.clientHeight + "px";
+  window.addEventListener("resize", () => {
+    headerHight.value = header.value?.clientHeight + "px";
+  });
+});
 </script>
 
 <style lang="scss" scoped>
@@ -39,8 +39,6 @@
 
   .table-box {
     border-bottom: 1px solid $BORDERHUI;
-    height: 100%;
-    overflow: auto;
   }
 
   .pagination {

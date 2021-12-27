@@ -2,7 +2,7 @@ import reuqest from '@/util/axios'
 import { AxiosResponse } from "axios"
 
 // 列表
-export const goodsPage = (params:Params):Promise<AxiosResponse<PageResult>> => {
+export const goodsPage = (params:PageParams):Promise<AxiosResponse<PageResult>> => {
     return reuqest.get("/manage/goods/page",{
         params
     })

@@ -1,82 +1,89 @@
 <template>
   <div class="item">
     <div class="item-head">
-      <el-image
-        fit="cover"
-        :src="'https://api.yimian.xyz/img?type=moe&time=' + new Date().getTime()"
-        lazy
-      >
-        <template #placeholder>
-          <div class="image-slot"></div>
-        </template>
-      </el-image>
+      <HeadImage
+        style="width: 40px; height: 40px"
+        :avatarFrame="item.avatarFrame"
+        :headImage="item.head"
+      ></HeadImage>
       <div class="item-head-right">
         <div class="item-head-right-top">
-          <span class="name">西瓜会爆炸</span>
+          <span class="name">{{ item.nickName }}</span>
           <span class="btn" style="background-color: #24272f">
             <element-dianzan></element-dianzan>
-            <span class="btn-txt">340</span>
+            <span class="btn-txt">{{ item.fabulousNums }}</span>
           </span>
           <span class="btn" style="background-color: #ff8888">
             <element-pinglun></element-pinglun>
-            <span class="btn-txt">40</span>
+            <span class="btn-txt">{{ item.commentNums }}</span>
           </span>
           <div class="operation">
-            <span>禁言</span>
-            <span>删除</span>
+            <!-- <el-popconfirm
+              title="确定要禁言这个用户吗？"
+              @confirm="btnHandle('userUpdate', item)"
+            >
+              <template #reference>
+                <span>禁言</span>
+              </template>
+            </el-popconfirm> -->
+            <el-popconfirm
+              title="确定要删除这个动态吗？"
+              @confirm="btnHandle('delete', item)"
+            >
+              <template #reference>
+                <span>删除</span>
+              </template>
+            </el-popconfirm>
           </div>
         </div>
         <div class="item-head-right-bottom">
-          <span class="time">2015/7/8 12:12:12</span>
+          <span class="time">{{ item.createTime }}</span>
           <div class="other">
             <element-jvbao class="icon"></element-jvbao>
-            <span>63</span>
+            <span>{{ item.reportNums }}</span>
           </div>
         </div>
       </div>
     </div>
     <div class="item-content">
-      <el-image
-        fit="cover"
-        :src="'https://api.yimian.xyz/img?type=moe&time=' + new Date().getTime()"
-        lazy
-      >
-        <template #placeholder>
-          <div class="image-slot"></div>
-        </template>
-      </el-image>
-
+      <ImageEl style="width: 100px; height: 100px" :src="item.cover"></ImageEl>
       <div class="message">
-        阿里巴巴矢量图标库是一款收集了几万个图标的软件，
-        您可以在图标库中搜索需要使用的图标类型，阿里巴巴矢量图标库包含了几十种分类，
-        点击任意一个分类即可查看里面的图标，需要注意的是图标不需要下载，找到您要使用的图标后，
-        直接将其拖动到PS中就可以编辑，非常方便。
+        {{ item.content }}
       </div>
     </div>
     <div class="detail-btn">
-      <span>查看详情</span>
+      <span @click="btnHandle('detail', item)">查看详情</span>
     </div>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script lang="ts" setup>
+import ImageEl from "@/components/ImageEl/index.vue";
+import HeadImage from "@/components/HeadImage/index.vue";
 
-export default defineComponent({
-  props: {
-    item: {
-      type: Object,
-    },
-    imageList: {
-      // 预览图片列表
-      type: Array,
-    },
-    initialIndex: {
-      // 默认展示预览图片下标
-      type: Number,
+defineProps({
+  item: {
+    type: Object,
+    default() {
+      return {};
     },
   },
+  imageList: {
+    // 预览图片列表
+    type: Array,
+  },
+  initialIndex: {
+    // 默认展示预览图片下标
+    type: Number,
+  },
 });
+
+// 默认按钮点击事件
+const emit = defineEmits(["handle"]);
+
+const btnHandle = (name: string, value: any, item?: any) => {
+  emit("handle", name, value, item);
+};
 </script>
 
 <style lang="scss" scoped>
@@ -95,23 +102,6 @@ export default defineComponent({
     justify-content: space-between;
     padding-bottom: 10px;
     border-bottom: 1px solid $BORDERHUI;
-
-    :deep(.el-image) {
-      position: relative;
-      width: 40px;
-      height: 40px;
-      border: 2px solid $BORDERHUI;
-      border-radius: 3px;
-
-      .image-slot {
-        font-size: 10px;
-        height: 100%;
-        color: $FONTHUI;
-        display: flex;
-        align-items: center;
-        justify-content: space-around;
-      }
-    }
 
     &-right {
       width: calc(100% - 50px);
@@ -172,45 +162,27 @@ export default defineComponent({
     padding: 10px 5px;
     display: flex;
     border-bottom: 1px solid $BORDERHUI;
-
-    :deep(.el-image) {
-      position: relative;
-      width: 100px;
-      height: 100px;
-      border: 2px solid $BORDERHUI;
-      border-radius: 3px;
-
-      .image-slot {
-        font-size: 10px;
-        height: 100%;
-        color: $FONTHUI;
-        display: flex;
-        align-items: center;
-        justify-content: space-around;
-      }
-    }
-
     .message {
-        width: calc(100% - 100px);
-        font-size: 12px;
-        color: $FONTHUI;
-        padding: 0px 5px;
-        line-height: 17px;
+      width: calc(100% - 100px);
+      font-size: 12px;
+      color: $FONTHUI;
+      padding-left: 10px;
+      line-height: 17px;
 
-        @include ellipsis(6)
+      @include ellipsis(6);
     }
   }
 
-  .detail-btn{
+  .detail-btn {
     height: 30px;
     text-align: center;
     line-height: 30px;
     font-size: 12px;
     padding: 5px;
 
-    span{
+    span {
       display: inline-block;
-      border:1px solid $BORDERHUI;
+      border: 1px solid $BORDERHUI;
       width: 80%;
       border-radius: 10px;
       cursor: pointer;

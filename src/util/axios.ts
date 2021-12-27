@@ -61,6 +61,7 @@ instance.interceptors.response.use((response) => {
     }else if(code === 400){
         router.push("/login")
     }
+    ElMessage.closeAll()
     ElMessage({
         type: "error",
         message: response.data.msg || "登陆失效"
@@ -70,6 +71,7 @@ instance.interceptors.response.use((response) => {
     // 请求报错时隐藏遮罩层
     elLoading?.close()
     // Do something with response error
+    ElMessage.closeAll()
     ElMessage({
         type: "error",
         message: "服务器错误"

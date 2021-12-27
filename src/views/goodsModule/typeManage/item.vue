@@ -1,16 +1,6 @@
 <template>
   <div class="item">
-    <el-image
-      fit="cover"
-      :src="`${imgUrl}/${item.typeIcon}`"
-      :preview-src-list="[]"
-      :initial-index="0"
-      lazy
-    >
-      <template #placeholder>
-        <div class="image-slot"></div>
-      </template>
-    </el-image>
+    <ImageEl style="width:50px;height:50px" :src="`${imgUrl}/${item.typeIcon}`" :previewList="[]" :initialIndex="0"></ImageEl>
 
     <div class="item-center">
       <span class="title">{{ item.typeName }}</span>
@@ -29,6 +19,7 @@
 
 <script lang="ts" setup>
 import { useStore } from "vuex"
+import ImageEl from "@/components/ImageEl/index.vue";
 
 defineProps({
   item: {
@@ -62,20 +53,6 @@ const btnHandle = (name: string, value: any, item: any) => {
   justify-content: space-between;
   padding: 5px;
   border-radius: 5px;
-  :deep(.el-image) {
-    height: 50px;
-    width: 50px;
-    border: 1px solid $BORDERHUI;
-    border-radius: 5px;
-    .image-slot {
-      font-size: 10px;
-      color: $FONTHUI;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: space-around;
-    }
-  }
 
   &-center {
     width: 45%;

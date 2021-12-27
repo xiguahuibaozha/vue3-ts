@@ -27,17 +27,13 @@
         v-for="(item, i) in tableData"
         :key="item.id"
         :item="item"
-        :imageList="
+        :previewList="
           tableData
             .map((o) => {
-              return o.image;
-            })
-            .filter((o) => {
-              return o;
+              return o.head;
             })
         "
         :initialIndex="i"
-
         @handle="handleChange"
       ></table-item>
     </template>
@@ -62,6 +58,7 @@ import { defineComponent, ref } from "vue";
 import { userPage, userUpdate, userDelete } from "@/api/userModule/user";
 import TableItem from "./item.vue";
 import PageDefault from "@/components/PageDefault/index.vue";
+import { useRouter } from "vue-router";
 
 export default defineComponent({
   components: {
@@ -112,11 +109,15 @@ export default defineComponent({
       getList()
     }
 
+    const { push } = useRouter()
+
     const handleChange = (name:string,value:any,item:any) => {
       if(name == 'delete'){
         userDelete(item.id).then(() => {
           getList()
         })
+      }else if(name == 'dynamic'){
+        push({path:'/dynamicManage',query:{userId:item.id}})
       }else{
         const params = {...item}
         params[name] = value

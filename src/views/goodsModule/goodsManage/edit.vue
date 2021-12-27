@@ -23,17 +23,14 @@
 
           <el-form-item label="商品类型">
             <el-checkbox-group v-model="formData.typeId">
-              <el-checkbox
-                v-for="item in goodsTypes"
-                :key="item.id"
-                :label="item.id"
-                >{{ item.typeName }}</el-checkbox
-              >
+              <el-checkbox v-for="item in goodsTypes" :key="item.id" :label="item.id">{{
+                item.typeName
+              }}</el-checkbox>
             </el-checkbox-group>
           </el-form-item>
 
           <el-form-item label="全景视频">
-            <FileUpload type="video"></FileUpload>
+            <FileUpload style="width: 50%;" ref="videoElement" type="video" @success="fileUploadSuccess"></FileUpload>
           </el-form-item>
 
           <el-form-item label="商品基本信息">
@@ -126,14 +123,6 @@
             </div>
           </el-form-item>
 
-          <el-form-item label="分享海报">
-            <FileUpload
-              type="image"
-              :defaultUrl="formData.goodsPoster"
-              @success="posterUploadSuccess"
-            ></FileUpload>
-          </el-form-item>
-
           <el-form-item label="状态">
             <el-radio-group v-model="formData.state">
               <el-radio
@@ -144,6 +133,21 @@
               >
             </el-radio-group>
           </el-form-item>
+          <el-form-item label="分享海报">
+            <FileUpload
+             style="width: 180px;height:180px;"
+              ref="posterElement"
+              type="image"
+              @success="posterUploadSuccess"
+            ></FileUpload>
+          </el-form-item>
+          <DragPoster
+            ref="dragPosterElement"
+            v-if="formData.goodsPoster"
+            @result="dragPosterChange"
+            :poster="formData.goodsPoster"
+            :defaultData="JSONParse(formData.posterSeat)"
+          ></DragPoster>
         </div>
       </div>
       <el-form-item>
@@ -154,25 +158,20 @@
 </template>
 
 <script lang="ts" setup>
-import { ElMessage } from "element-plus";
-import { ref, onMounted } from "vue";
-import { useStore } from "vuex";
+import { ref, onMounted, nextTick } from "vue";
 import FileUpload from "@/components/FileUpload/index.vue";
 import "@wangeditor/editor/dist/css/style.css";
-import {
-  createEditor,
-  createToolbar,
-  IEditorConfig,
-  IDomEditor,
-} from "@wangeditor/editor";
+import { IDomEditor } from "@wangeditor/editor";
 import { goodsConstant } from "@/util/constant";
-import { goodsTypeList } from "@/api/goodsModule/type"
+import { goodsTypeList } from "@/api/goodsModule/type";
 import { useRoute } from "vue-router";
 import { goodsDetail, goodsAdd, goodsUpdate } from "@/api/goodsModule/goods";
-import { setObjValuesFromOtherObj,JSONParse } from "@/util/utils"
-import { useRouter } from "vue-router"
+import { setObjValuesFromOtherObj, JSONParse } from "@/util/utils";
+import { useRouter } from "vue-router";
+import { editorConfig, initEditor } from "@/util/editor";
+import DragPoster from "@/components/DragPoster/index.vue";
 
-const router = useRouter()
+const router = useRouter();
 
 // 获取商品id 判断详情还是修改
 const { query } = useRoute();
@@ -184,7 +183,7 @@ goodsTypeList().then(({ data }) => {
 });
 
 // 枚举常量
-const { takeGoodsMode, isFreeShipping, goodsState } = goodsConstant;
+const { takeGoodsMode, isFreeShipping, goodsState } = goodsConstant.value;
 
 // 储存体积长宽高
 const volume = ref({
@@ -199,8 +198,7 @@ const formData = ref({
   goodsName: "",
   goodsPrice: 0,
   goodsStock: 0,
-  goodsFile:
-    "https://img.cdn.aliyun.dcloud.net.cn/guide/uniapp/%E7%AC%AC1%E8%AE%B2%EF%BC%88uni-app%E4%BA%A7%E5%93%81%E4%BB%8B%E7%BB%8D%EF%BC%89-%20DCloud%E5%AE%98%E6%96%B9%E8%A7%86%E9%A2%91%E6%95%99%E7%A8%8B@20200317.mp4", // 视频
+  goodsFile: "", // 视频
   circulation: 0,
   colour: "",
   takeGoodsMode: [],
@@ -214,53 +212,56 @@ const formData = ref({
   goodsPoster: "",
   state: 0,
   typeId: [],
+  posterSeat: "",
+  goodsCover: ""
 });
 
 const formatterFormData = (form: Obj) => {
   const goodsDbDto = {
-    "circulation": 0,
-    "colour": "",
-    "createTime": "",
-    "goodsBriefIntroduction": "",
-    "goodsDetails": "",
-    "goodsDetailsJson": "",
-    "goodsFile": "",
-    "goodsName": "",
-    "goodsPrice": 0,
-    "goodsSold": 0,
-    "goodsSpecifications": "",
-    "goodsStock": 0,
-    "id": 0,
-    "isDelete": 0,
-    "state": 0,
-    "updateTime": ""
-  }
-  setObjValuesFromOtherObj(goodsDbDto,form)
+    circulation: 0,
+    colour: "",
+    createTime: "",
+    goodsBriefIntroduction: "",
+    goodsDetails: "",
+    goodsDetailsJson: "",
+    goodsFile: "",
+    goodsName: "",
+    goodsPrice: 0,
+    goodsSold: 0,
+    goodsSpecifications: "",
+    goodsStock: 0,
+    id: 0,
+    isDelete: 0,
+    state: 0,
+    updateTime: "",
+    goodsCover: ""
+  };
+  setObjValuesFromOtherObj(goodsDbDto, form);
 
   const goodsInfoDbDto = {
-    "goodsId": 0,
-    "goodsPoster": "",
-    "goodsVolume": "",
-    "goodsWeight": 0,
-    "id": 0,
-    "isFreeShipping": 0,
-    "posterSeat": ""
-  }
+    goodsId: 0,
+    goodsPoster: "",
+    goodsVolume: "",
+    goodsWeight: 0,
+    id: 0,
+    isFreeShipping: 0,
+    posterSeat: "",
+  };
 
-  setObjValuesFromOtherObj(goodsInfoDbDto,form)
-  
+  setObjValuesFromOtherObj(goodsInfoDbDto, form);
+
   return {
     goodsDbDto,
     goodsInfoDbDto,
     takeGoodsMode: form.takeGoodsMode,
-    typeId: form.typeId
-  }
-}
+    typeId: form.typeId,
+  };
+};
 
 // 提交
 const saveBtn = () => {
   if (query.id) {
-    goodsUpdate(formatterFormData(formData.value))
+    goodsUpdate(formatterFormData(formData.value));
   } else {
     formData.value.goodsVolume = JSON.stringify({
       wide: volume.value.wide,
@@ -269,72 +270,44 @@ const saveBtn = () => {
       volume: volume.value.volume,
     });
     goodsAdd(formData.value).then(() => {
-      router.back()
+      router.back();
     });
   }
 };
 
-// 海报上传成功回调
-const posterUploadSuccess = ({ data }: MyResponse) => {
-  formData.value.goodsPoster = data[0].url;
+// 设置海报二维码位置
+const dragPosterChange = (val: any) => {
+  formData.value.posterSeat = JSON.stringify(val);
 };
 
-// 获取文件上传地址
-const { state } = useStore();
-const actionUrl = state.settings.baseUrl + `/other/fdfs`;
-// 富文本配置
-const editorConfig: Partial<IEditorConfig> = {
-  placeholder: "请输入内容",
-  MENU_CONF: {
-    uploadImage: {
-      server: actionUrl,
-      fieldName: "files",
-      // 单个文件的最大体积限制，默认为 2M
-      maxFileSize: 20 * 1024 * 1024, // 20M
-      // 自定义插入图片
-      customInsert(response: any, insertFn: InsertFnType) {
-        // res 即服务端的返回结果
-        // 从 res 中找到 url alt href ，然后插图图片
-        if (response.code == 200 && response.data.length > 0) {
-          insertFn(
-            `${state.settings.imgUrl}/${response.data[0].url}`,
-            response.data[0].old,
-            ""
-          );
-        } else {
-          ElMessage({
-            message: "图片上传出错了",
-            type: "error",
-          });
-        }
-      },
-    },
-  },
+// 视频上传成功回调
+const fileUploadSuccess = ({ data }: MyResponse) => {
+  formData.value.goodsFile = JSON.stringify(data[0]);
+  formData.value.goodsCover = data[0].images
 };
+
+// 海报上传成功回调
+const posterUploadSuccess = ({ data }: MyResponse) => {
+  formData.value.goodsPoster = data[0].url //JSON.stringify(data[0]);
+};
+
+// 富文本编辑器改变
 editorConfig.onChange = (editor: IDomEditor) => {
   // 元素节点
   formData.value.goodsDetailsJson = JSON.stringify(editor.children);
   // 当编辑器选区、内容变化时，即触发
-  formData.value.goodsDetails = editor.getHtml();
-};
-
-// 初始化富文本
-const initEditor = (goodsDetailsJson: any) => {
-  // 创建编辑器
-  const editor = createEditor({
-    selector: "#editor-container",
-    config: editorConfig,
-    content: goodsDetailsJson, // 默认内容，下文有解释
-    mode: "default", // 或者 'simple'
-  });
-
-  // 创建工具栏
-  createToolbar({
-    editor,
-    selector: "#toolbar-container",
-    mode: "default", // 或者 'simple'
+  formData.value.goodsDetails = JSON.stringify({
+    json: editor.children,
+    html: editor.getHtml(),
   });
 };
+
+// 获取拖拽元素
+const dragPosterElement = ref();
+//获取全景视频元素
+const videoElement = ref();
+//获取海报元素
+const posterElement = ref();
 
 onMounted(() => {
   if (query.id) {
@@ -348,16 +321,21 @@ onMounted(() => {
         volume.value.high = goodsVolume.high;
         volume.value.volume = goodsVolume.volume;
       }
-      formData.value.typeId = data.typeDbDTOs.map((item: Obj) =>item.id);
-      // 储存富文本数据 获取商品详情富文本JSON 
-      let goodsDetailsJson: any[] = [];
-      if (data.goodsDetailsJson) {
-        goodsDetailsJson = JSONParse(data.goodsDetailsJson);
-      }
-      initEditor(goodsDetailsJson);
+      formData.value.typeId = data.typeDbDTOs.map((item: Obj) => item.id);
+      // 储存富文本数据 获取商品详情富文本JSON
+      initEditor(
+        "#editor-container",
+        "#toolbar-container",
+        JSONParse(data.goodsDetails)?.json
+      );
+      nextTick(() => {
+        dragPosterElement.value.setData(JSONParse(data.posterSeat));
+        videoElement.value.setData(data.goodsFile);
+        posterElement.value.setData(data.goodsPoster);
+      });
     });
   } else {
-    initEditor([]);
+    initEditor("#editor-container", "#toolbar-container", []);
   }
 });
 </script>

@@ -73,6 +73,7 @@ const reset = () => {
 
 const handleSizeChange = (size: number) => {
   filterForm.value.pageSize = size;
+  filterForm.value.currentPage = 1
   getList();
 };
 
