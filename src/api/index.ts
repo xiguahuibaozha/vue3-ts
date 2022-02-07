@@ -5,25 +5,9 @@ import { ElMessage } from 'element-plus'
 // 如果提示为 "response" 则按照返回msg提示
 export const MessagePath: RequestSuccessMessage = {
     default: {
-        "/manage/store": {},
         "/manage/goods": {},
-        "/manage/type": {},
-        "/manage/warehousing": {},
-        "/manage/activity": {}
     }, // 这里面的接口请求成功会根据请求类型 PUT=>编辑成功 DELETE=>删除成功 POST=>新增成功
-    other: {
-        "/manage/user": {
-            delete: "删除成功",
-            put: "操作成功"
-        },
-        "/manage/userDynamic/delete": {
-            delete: "删除成功",
-        },
-        // 修改密码
-        "/manage/sysUser/updateCurrentSysUserPassword": {
-            put: "修改成功"
-        }
-    } // 这里面的接口请求成功会默认提示 操作成功
+    other: {} // 这里面的接口请求成功会默认提示 操作成功
 }
 
 export type RequestSuccessMessage = {

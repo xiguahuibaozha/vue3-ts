@@ -23,36 +23,11 @@
       </span>
       <template #dropdown>
         <el-dropdown-menu>
-          <el-dropdown-item command="passwordUpdate">修改密码</el-dropdown-item>
+          <!-- <el-dropdown-item command="passwordUpdate">修改密码</el-dropdown-item> -->
           <el-dropdown-item divided command="loginOut">退出登录</el-dropdown-item>
         </el-dropdown-menu>
       </template>
     </el-dropdown>
-
-    <el-dialog v-model="updatePasswordDialogVisible" title="修改密码" width="300px">
-      <el-form :model="passWordForm">
-        <el-form-item label="旧密码">
-          <el-input
-            v-model="passWordForm.oldPassword"
-            placeholder="请输入"
-            type="password"
-            show-password
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="新密码">
-          <el-input
-            v-model="passWordForm.newPassword"
-            placeholder="请输入"
-            type="password"
-            show-password
-          ></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="rightChangePassword">确认</el-button>
-          <el-button @click="noChangePassword">取消</el-button>
-        </el-form-item>
-      </el-form>
-    </el-dialog>
   </div>
 </template>
 
@@ -61,7 +36,6 @@ import { defineComponent, computed, watchEffect, ref } from "vue";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
 import avatar from "@/assets/avatar.png";
-import { passwordUpdate } from "@/api/app";
 
 export default defineComponent({
   setup() {
@@ -87,38 +61,10 @@ export default defineComponent({
       dispatch("layout/changeSideWidth", isCollapse.value);
     };
 
-    const updatePasswordDialogVisible = ref(false);
-
-    // 修改密码 form
-    const passWordForm = ref({
-      newPassword: null,
-      oldPassword: null,
-    });
-
-    // 确认修改密码
-    const rightChangePassword = () => {
-      passwordUpdate(passWordForm.value).then(() => {
-        updatePasswordDialogVisible.value = false;
-        passWordForm.value = {
-          newPassword: null,
-          oldPassword: null,
-        };
-      });
-    };
-
-    // 取消修改密码
-    const noChangePassword = () => {
-      passWordForm.value = {
-        newPassword: null,
-        oldPassword: null,
-      };
-      updatePasswordDialogVisible.value = false;
-    };
-
     // app store相关
     const handleCommand = (command: string) => {
       if (command == "passwordUpdate") {
-        updatePasswordDialogVisible.value = true;
+        console.log("修改密码！")
       } else if (command == "loginOut") {
         dispatch(`app/${command}`);
       }
@@ -130,11 +76,7 @@ export default defineComponent({
       avatar,
       userInfo: state.app.userInfo,
       breadcrumbList,
-      handleCommand,
-      updatePasswordDialogVisible,
-      passWordForm,
-      rightChangePassword,
-      noChangePassword,
+      handleCommand
     };
   },
 });

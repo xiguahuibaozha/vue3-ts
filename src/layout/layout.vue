@@ -62,7 +62,7 @@ export default defineComponent({
   .container {
     transition: all v-bind(timeout);
     width: calc(100% - v-bind(sideWidth));
-    background-color: $DISEHUI;
+    background-color: $BACKGROUND;
     display: flex;
     flex-direction: column;
 

@@ -54,7 +54,7 @@ export default defineComponent({
   setup() {
     const scene = ref(null);
 
-    const loginForm = ref({ username: "admin", password: "admin" });
+    const loginForm = ref({ username: "root", password: "yy123456" });
 
     onMounted(() => {
       new Parallax(scene.value, {

@@ -4,8 +4,9 @@
       class="avatar-uploader"
       :class="type == 'video' ? '' : 'image-uploader'"
       name="files"
+      :multiple="false"
       :action="actionUrl"
-      :show-file-list="false"
+      :show-file-list="showFileList"
       :on-success="handleAvatarSuccess"
       :before-upload="beforeAvatarUpload"
       :on-error="handleAvatarError"
@@ -26,7 +27,10 @@
         class="video"
       ></video>
       <!-- <img v-if="type == 'image' && resultUrl" :src="resultUrl" class="avatar" /> -->
-      <el-icon v-else class="avatar-uploader-icon"><plus /></el-icon>
+      <el-icon v-else-if="type == 'video' || type == 'image'" class="avatar-uploader-icon"
+        ><plus
+      /></el-icon>
+      <el-button v-else style="width: 100px" type="primary">点击上传</el-button>
     </el-upload>
   </div>
 </template>
@@ -35,12 +39,12 @@
 import { ElMessage } from "element-plus";
 import { ref, watch } from "vue";
 import { useStore } from "vuex";
-import { getUrl } from "@/util/utils"
+import { getUrl } from "@/util";
 
 const loading = ref(false);
 
 const { state } = useStore();
-const actionUrl = state.settings.baseUrl + `/other/fdfs`;
+const actionUrl = state.settings.imgUpUrl + `/other/fdfs`;
 const imgUrl = state.settings.imgUrl;
 
 const props = defineProps({
@@ -53,20 +57,11 @@ const props = defineProps({
     type: String,
     default: "",
   },
+  showFileList: {
+    type: Boolean,
+    default: false,
+  },
 });
-
-// const getUrl = (result: string): string => {
-//   if (Object.keys(JSONParse(result)).length > 0) {
-//     const resultObj = JSONParse(result)
-//     if (/^http(|s)/.test(resultObj.url)) {
-//       return resultObj.url;
-//     } else {
-//       return `${imgUrl}/${resultObj.url}`;
-//     }
-//   }else {
-//     return result
-//   }
-// };
 
 const resultUrl = ref(getUrl(props.defaultUrl));
 
@@ -80,7 +75,6 @@ watch(
 // 设置data默认值请调用 setData方法
 defineExpose({
   setData(result: any) {
-    console.log(getUrl(result))
     resultUrl.value = getUrl(result);
   },
 });
@@ -115,7 +109,10 @@ const handleAvatarError = () => {
 };
 
 const beforeAvatarUpload = (file: File) => {
-  if (file.type.includes(props.type)) {
+  if (props.type == "other") {
+    loading.value = true;
+    return true;
+  } else if (file.type.includes(props.type)) {
     loading.value = true;
     return true;
   } else {

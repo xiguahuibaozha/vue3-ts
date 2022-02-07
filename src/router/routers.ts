@@ -34,176 +34,47 @@ export const otherRouters: Array<RouteRecordRaw> = [
                 icon: 'svg-dashboard'
             }
         }]
-    }, {
-        path: '/userModule',
-        component: Layout,
-        name: 'userModule',
-        redirect: '/userManage',
-        meta: {
-            title: '用户模块'
-        },
-        children: [{
-            path: '/userManage',
-            name: 'userManage',
-            component: _import("userManage"),
-            meta: {
-                title: '用户管理'
-            }
-        }, {
-            path: '/levelManage',
-            name: 'levelManage',
-            component: _import("levelManage"),
-            meta: {
-                title: '等级管理'
-            }
-        }]
-    }, {
-        path: '/dynamicModule',
-        component: Layout,
-        name: 'dynamicModule',
-        redirect: '/dynamicManage',
-        meta: {
-            title: '动态模块'
-        },
-        children: [{
-            path: '/dynamicManage',
-            name: 'dynamicManage',
-            component: _import("dynamicManage"),
-            meta: {
-                title: '动态管理'
-            }
-        }, {
-            path: '/dynamicDetail',
-            name: 'dynamicDetail',
-            component: _import("dynamicDetail"),
-            meta: {
-                title: '动态详情',
-                hidden: true
-            }
-        }]
-    }, {
-        path: '/storeModule',
-        component: Layout,
-        name: 'storeModule',
-        redirect: '/storeModule',
-        meta: {
-            title: '门店仓库模块'
-        },
-        children: [{
-            path: '/storeManage',
-            name: 'storeManage',
-            component: _import("storeManage"),
-            meta: {
-                title: '门店管理'
-            }
-        }, {
-            path: '/storeEdit',
-            name: 'storeEdit',
-            component: _import("storeEdit"),
-            meta: {
-                title: '门店编辑',
-                hidden: true
-            }
-        }, {
-            path: '/warehouseManage',
-            name: 'warehouseManage',
-            component: _import("warehouseManage"),
-            meta: {
-                title: '仓库管理'
-            }
-        }, {
-            path: '/warehouseEdit',
-            name: 'warehouseEdit',
-            component: _import("warehouseEdit"),
-            meta: {
-                title: '仓库编辑',
-                hidden: true
-            }
-        }]
-    }, {
+    },
+    {
         path: '/goodsModule',
         component: Layout,
         name: 'goodsModule',
-        redirect: '/goodsManage',
+        redirect: '/goods',
         meta: {
-            title: '商品模块'
+            title: '商品模块',
+            icon: 'ShoppingBag'
         },
         children: [{
-            path: '/goodsManage',
-            name: 'goodsManage',
-            component: _import("goodsManage"),
+            path: '/goods',
+            name: 'goods',
+            component: _import("goods"),
             meta: {
-                title: '商品管理'
+                title: '商品管理',
+                icon: 'ShoppingBag'
             }
-        }, {
+        },{
             path: '/goodsEdit',
             name: 'goodsEdit',
             component: _import("goodsEdit"),
             meta: {
+                hidden: true,
                 title: '商品编辑',
-                hidden: true
-            }
-        }, {
-            path: '/typeManage',
-            name: 'typeManage',
-            component: _import("typeManage"),
-            meta: {
-                title: '类型管理'
-            }
-        }, {
-            path: '/typeEdit',
-            name: 'typeEdit',
-            component: _import("typeEdit"),
-            meta: {
-                title: '编辑类型',
-                hidden: true
+                icon: 'ShoppingBag'
             }
         }]
-    }, {
-        path: '/activityModule',
-        component: Layout,
-        name: 'activityModule',
-        redirect: '/activityManage',
-        meta: {
-            title: '活动模块'
-        },
-        children: [{
-            path: '/activityManage',
-            name: 'activityManage',
-            component: _import("activityManage"),
-            meta: {
-                title: '活动管理'
-            }
-        }, {
-            path: '/activityEdit',
-            name: 'activityEdit',
-            component: _import("activityEdit"),
-            meta: {
-                title: '活动编辑',
-                hidden: true
-            }
-        }]
-    }, {
+    },
+    {
         path: '/orderModule',
         component: Layout,
         name: 'orderModule',
-        redirect: '/orderManage',
-        meta: {
-            title: '订单模块'
-        },
+        redirect: '/order',
         children: [{
-            path: '/orderManage',
-            name: 'orderManage',
-            component: _import("orderManage"),
+            path: '/order',
+            name: 'order',
+            component: _import("order"),
             meta: {
-                title: '订单管理'
-            }
-        }, {
-            path: '/orderDetail',
-            name: 'orderDetail',
-            component: _import("orderDetail"),
-            meta: {
-                title: '订单详情'
+                title: '订单管理',
+                icon: 'Tickets'
             }
         }]
     }

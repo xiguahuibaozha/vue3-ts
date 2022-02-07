@@ -21,11 +21,13 @@ let elLoading:ILoadingInstance|null = null
 
 // Add a request interceptor
 instance.interceptors.request.use((config) => {
-    elLoading = ElLoading.service({
-        lock: false,
-        text: 'Loading',
-        background: 'rgba(0, 0, 0, 0.7)',
-    })
+    if(elLoading == null){
+        elLoading = ElLoading.service({
+            lock: false,
+            text: 'Loading',
+            background: 'rgba(0, 0, 0, 0.7)',
+        })
+    }
 
     if(config.url){
         loadingRequest.push(config.url)
@@ -35,7 +37,7 @@ instance.interceptors.request.use((config) => {
     config.headers['token'] = storage.getLocalStorage("token")
 
     return config;
-}, function (error) {
+}, (error) => {
     // Do something with request error
     return Promise.reject(error);
 });
@@ -49,6 +51,17 @@ instance.interceptors.response.use((response) => {
     // 请求全部完成后关闭遮罩层
     if(loadingRequest.length === 0){
         elLoading?.close()
+        elLoading = null
+    }
+
+    // blob格式跳出下面判断
+    if(response.data instanceof Blob){
+        return response;
+    }
+
+    // 静态文件跳过判断code环节
+    if(response.headers['content-type'] == 'text/html'){
+        return response;
     }
 
     // Do something with response data
@@ -64,10 +77,12 @@ instance.interceptors.response.use((response) => {
     ElMessage.closeAll()
     ElMessage({
         type: "error",
-        message: response.data.msg || "登陆失效"
+        message: response.data.msg || "服务器错误"
     })
     return Promise.reject(response);
 }, (error) => {
+    // 清空所有请求
+    loadingRequest = []
     // 请求报错时隐藏遮罩层
     elLoading?.close()
     // Do something with response error
