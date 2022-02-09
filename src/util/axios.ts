@@ -76,6 +76,7 @@ instance.interceptors.response.use((response) => {
     }
     ElMessage.closeAll()
     ElMessage({
+        showClose: true,
         type: "error",
         message: response.data.msg || "服务器错误"
     })
@@ -88,6 +89,7 @@ instance.interceptors.response.use((response) => {
     // Do something with response error
     ElMessage.closeAll()
     ElMessage({
+        showClose: true,
         type: "error",
         message: "服务器错误"
     })

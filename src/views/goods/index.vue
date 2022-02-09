@@ -33,13 +33,37 @@
             </template>
           </el-table-column>
           <el-table-column prop="goodsSpeName" label="规格名称" />
-          <el-table-column prop="goodsPrice" label="价格" />
+          <el-table-column prop="goodsNumber" label="数量" />
+          <el-table-column prop="goodsPrice" label="价格（￥）" />
           <el-table-column prop="goodsStock" label="库存" />
           <el-table-column prop="createTime" label="创建时间" />
         </el-table>
       </template>
     </el-table-column>
     <el-table-column label="商品名称" prop="goodsName" />
+    <el-table-column label="访问地址">
+      <template #default="props">
+        {{`${h5Url}/${props.row.id}`}}
+      </template>
+    </el-table-column>
+    <el-table-column label="访问二维码">
+      <template #default="props">
+
+        <el-popover
+          trigger="click"
+          placement="bottom"
+          title="二维码地址"
+          :width="180"
+        >
+          <img :src="qrcodeUrl" style="width:180px;height:180px;" />
+
+          <template #reference>
+            <el-icon @click="getQrcodeUrl(`${h5Url}/${props.row.id}`)" :size="20" style="cursor: pointer;"><element-qrcode></element-qrcode></el-icon>
+          </template>
+        </el-popover>
+        
+      </template>
+    </el-table-column>
     <el-table-column label="创建时间" prop="createTime" />
     <el-table-column fixed="right" label="操作" width="200">
       <template #default="props">
@@ -71,10 +95,13 @@ import { ref } from "vue";
 import { page, deleteGoods } from "@/api/goods";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
+import QRCode from 'qrcode'
 
 const { push } = useRouter()
 
 const { state } = useStore()
+
+const h5Url = state.settings.h5Url
 
 // 查询表单
 const defauleForm: PageParams = {
@@ -123,6 +150,16 @@ const handleCurrentChange = () => {
 const deleteBtn = (id:number) => {
   deleteGoods(id)
 }
+
+// 二维码
+const qrcodeUrl = ref<string>()
+const getQrcodeUrl = (url:string) => {
+  QRCode.toDataURL(url)
+  .then((url:string) => {
+    qrcodeUrl.value =  url
+  })
+}
+
 </script>
 
 <style lang="scss" scoped></style>

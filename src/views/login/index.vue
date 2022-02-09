@@ -25,6 +25,7 @@
               v-model="loginForm.password"
               placeholder="密码"
               type="password"
+              show-password
             >
               <template #prefix>
                 <el-icon :size="20"><Lock /></el-icon>
@@ -54,7 +55,7 @@ export default defineComponent({
   setup() {
     const scene = ref(null);
 
-    const loginForm = ref({ username: "root", password: "yy123456" });
+    const loginForm = ref({ username: "", password: "" });
 
     onMounted(() => {
       new Parallax(scene.value, {

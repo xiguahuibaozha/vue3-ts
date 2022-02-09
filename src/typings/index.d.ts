@@ -2,6 +2,7 @@ declare module '*.json'
 declare module '*.png'
 declare module '*.svg'
 declare module 'parallax-js'
+declare module 'qrcode'
 
 declare type Obj = {
     [name: string]: any,

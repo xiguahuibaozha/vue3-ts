@@ -8,7 +8,7 @@
       <el-button type="text" @click="addSpe">新增</el-button>
 
       <div v-for="(item, index) in form.goodsSpeList" :key="index" class="speItem">
-        第 {{index + 1}} 个
+        第 {{index + 1}} 个规格
         <el-form-item label="规格图片">
           <FileUpload
             @success="({ data }) => speImgUpSuccess(item, data)"
@@ -19,8 +19,14 @@
         <el-form-item label="规格名">
           <el-input v-model="item.goodsSpeName" placeholder="请输入规格名"></el-input>
         </el-form-item>
-        <el-form-item label="价格">
+        <el-form-item label="数量">
+          <el-input-number v-model="item.goodsNumber" :min="0" :step="1" step-strictly />
+        </el-form-item>
+        <el-form-item label="价格 ￥">
           <el-input-number v-model="item.goodsPrice" :min="0" />
+        </el-form-item>
+        <el-form-item>
+          预计目前规格商品单价为 {{item.goodsPrice / item.goodsNumber}}￥
         </el-form-item>
         <el-form-item label="库存">
           <el-input-number v-model="item.goodsStock" :min="0" :step="1" step-strictly />
@@ -122,6 +128,7 @@ const addSpe = () => {
     goodsSpeImg: null,
     goodsSpeName: null,
     goodsStock: null,
+    goodsNumber: null
   });
 };
 

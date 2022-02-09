@@ -33,7 +33,7 @@
         v-model="dateTime"
         @change="dateTimeChange"
         type="datetimerange"
-        value-format="YYYY/MM/DD HH:mm:ss"
+        value-format="YYYY-MM-DD HH:mm:ss"
         range-separator="至"
         start-placeholder="开始时间"
         end-placeholder="结束时间"
@@ -47,14 +47,19 @@
   </el-form>
 
   <el-button type="text" size="mini" @click="exportOrder">导出报表</el-button>
+  <div>
+    <span class="text">支付宝余额：【账户余额：{{ALBalance.totalAmount}}，账户可用余额：{{ALBalance.availableAmount}}，冻结金额：{{ALBalance.freezeAmount}}】</span>
+    <!-- <br /><span class="text">微信余额：【微信账户余额：{{ALBalance.totalAmount}}，账户可用余额：{{ALBalance.availableAmount}}，冻结金额：{{ALBalance.freezeAmount}}】</span> -->
+    <el-button type="text" size="mini" @click="getBalance">刷新余额</el-button>
+  </div>
 
-  <el-table :data="tableData" style="margin-top: 20px;">
+  <el-table :data="tableData" style="margin-top: 10px;">
     <el-table-column label="订单号" prop="orderNo" width="250" />
     <el-table-column label="商品名称" prop="goodsName" width="80"/>
-    <el-table-column label="规格" prop="goodsSpeName" width="80"/>
+    <el-table-column label="规格" prop="goodsSpeName" width="200"/>
     <el-table-column label="购买数量" prop="goodsNum" width="80"/>
-    <el-table-column label="单价" prop="goodsPrice" width="80"/>
-    <el-table-column label="订单总价" prop="totalPrice" width="80"/>
+    <el-table-column label="单价 ￥" prop="goodsPrice" width="80"/>
+    <el-table-column label="订单总价 ￥" prop="totalPrice" width="100"/>
     <el-table-column label="购买人" prop="buyRealName" width="80"/>
     <el-table-column label="购买人手机号" prop="buyPhone" width="120"/>
     <el-table-column label="购买人身份证" prop="buyCardId" width="180"/>
@@ -101,7 +106,7 @@
 <script lang="ts" setup>
 import { ref } from "vue";
 import constants from "@/util/contants"
-import { page, updateStatus, report } from "@/api/order"
+import { page, updateStatus, report, getALBalance } from "@/api/order"
 
 // 枚举
 const { payWay, orderState } = constants
@@ -129,7 +134,7 @@ const dateTime = ref([]);
 // 下单时间变化
 const dateTimeChange = (dateTimes:string[]) => {
   formFilter.value.startTime = (dateTimes??[])[0]
-  formFilter.value.startTime = (dateTimes??[])[1]
+  formFilter.value.endTime = (dateTimes??[])[1]
 }
 
 const submit = () => {
@@ -138,6 +143,7 @@ const submit = () => {
 
 const reset = () => {
   formFilter.value = { ...defauleForm }
+  dateTime.value = []
   getPage()
 };
 
@@ -186,6 +192,19 @@ const exportOrder = () => {
     downloadElement = null
   })
 }
+
+// 商户信息dialog
+const ALBalance = ref<any>({})
+const getBalance = () => {
+  getALBalance().then(({data}) => {
+    ALBalance.value = data
+  })
+}
+getBalance()
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+  .text{
+    font-size: 12px;
+  }
+</style>

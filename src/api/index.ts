@@ -47,6 +47,7 @@ export const ResponseMessage = (response: AxiosResponse) => {
         if (resultMessage) {
             ElMessage.closeAll()
             ElMessage({
+                showClose: true,
                 message: resultMessage == "response" ? response.data.msg : resultMessage,
                 type: 'success',
             })

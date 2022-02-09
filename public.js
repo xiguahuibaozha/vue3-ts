@@ -51,8 +51,8 @@ conn.on('ready', async () => {
         })
     })
 }).connect({
-    host: '139.159.244.52',
+    host: '',
     port: 22,
-    username: 'root',
-    password: 'rHJa2JLqMm!'
+    username: '',
+    password: ''
 });            

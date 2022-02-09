@@ -20,3 +20,8 @@ export const report = (params:PageParams):Promise<AxiosResponse> => {
         responseType: "blob"
     })
 }
+
+// 获取支付宝商户信息 
+export const getALBalance = ():Promise<AxiosResponse> => {
+    return request.get("/manage/aliPayBusiness/getBalance")
+}

@@ -20,15 +20,16 @@ $BORDERHEI: #707070;
 $ASIDEHUISE: #24272F;
 $BACKGROUND: white;
 
-
 @font-face {
     font-family: "FZWenZMXCJW";
     src: url("~@/assets/ttf/FZWenZMXCJW.TTF") format("truetype");
 }
 
+// logo字体
 @font-face {
     font-family: "FZNHT";
-    src: url("~@/assets/ttf/FZNHT.TTF") format("truetype");
+    // src: url("~@/assets/ttf/FZNHT.TTF") format("truetype");
+    src: url("~@/assets/ttf/YaYuanGuYin-1.ttf") format("truetype");;
 }
 
 // 多行超出显示。。。
