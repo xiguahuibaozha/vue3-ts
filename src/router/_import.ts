@@ -6,8 +6,7 @@ type RouterMap = {
 
 const map:RouterMap = {
     "order": () => import("@/views/order/index.vue"),
-    "goods": () => import("@/views/goods/index.vue"),
-    "goodsEdit": () => import("@/views/goods/edit.vue")
+    "orderEdit": () => import("@/views/order/edit.vue")
 }
 
 export default (file:string) => {

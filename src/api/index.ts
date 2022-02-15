@@ -4,9 +4,7 @@ import { ElMessage } from 'element-plus'
 // 将需要提示的接口名储存起来，比如说修改，删除提示修改成功删除成功，操作提示操作成功
 // 如果提示为 "response" 则按照返回msg提示
 export const MessagePath: RequestSuccessMessage = {
-    default: {
-        "/manage/goods": {},
-    }, // 这里面的接口请求成功会根据请求类型 PUT=>编辑成功 DELETE=>删除成功 POST=>新增成功
+    default: {}, // 这里面的接口请求成功会根据请求类型 PUT=>编辑成功 DELETE=>删除成功 POST=>新增成功
     other: {} // 这里面的接口请求成功会默认提示 操作成功
 }
 

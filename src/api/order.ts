@@ -3,25 +3,22 @@ import { AxiosResponse } from "axios"
 
 // 分页
 export const page = (params:PageParams):Promise<AxiosResponse<PageResult>> => {
-    return request.get("/manage/order/page",{
+    return request.get("/manage/orderInfo",{
         params
     })
 }
 
-// 修改状态/manage/order/updateStatus
-export const updateStatus = (data:Params):Promise<AxiosResponse> => {
-    return request.put("/manage/order/updateStatus",data)
+// 新增
+export const addOrder = (data:Params):Promise<AxiosResponse> => {
+    return request.post("/manage/orderInfo", data)
 }
 
-// 分页
-export const report = (params:PageParams):Promise<AxiosResponse> => {
-    return request.get("/manage/order/report",{
-        params,
-        responseType: "blob"
+// 删除
+export const deleteOrder = (ids:number | number[]):Promise<AxiosResponse> => {
+    if(!(ids instanceof Array)){
+        ids = [ids]
+    }
+    return request.delete("/manage/orderInfo", {
+        data: ids
     })
-}
-
-// 获取支付宝商户信息 
-export const getALBalance = ():Promise<AxiosResponse> => {
-    return request.get("/manage/aliPayBusiness/getBalance")
 }

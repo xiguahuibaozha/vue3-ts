@@ -28,7 +28,7 @@ export const goodsUpdate = (data:Params):Promise<AxiosResponse> => {
 }
 
 // 删除
-export const deleteGoods = (id:number | number[]):Promise<AxiosResponse> => {
+export const deleteOrder = (id:number | number[]):Promise<AxiosResponse> => {
     if(!(id instanceof Array)){
         id = [id]
     }

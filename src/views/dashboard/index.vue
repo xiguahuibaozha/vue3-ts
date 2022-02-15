@@ -3,7 +3,11 @@
       <div class="title">{{state.settings.title}}</div>
       <h3>控制台</h3>
       <h4>用户名：{{state.app.userInfo.username}}</h4>
+
+      <el-button type="primary">更新用户信息</el-button>
   </div>
+
+  
 </template>
 
 <script lang="ts" setup>

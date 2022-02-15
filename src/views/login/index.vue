@@ -21,12 +21,7 @@
             </el-input>
           </el-form-item>
           <el-form-item>
-            <el-input
-              v-model="loginForm.password"
-              placeholder="密码"
-              type="password"
-              show-password
-            >
+            <el-input v-model="loginForm.password" placeholder="密码" type="password">
               <template #prefix>
                 <el-icon :size="20"><Lock /></el-icon>
               </template>
@@ -55,7 +50,7 @@ export default defineComponent({
   setup() {
     const scene = ref(null);
 
-    const loginForm = ref({ username: "", password: "" });
+    const loginForm = ref({ username: "root", password: "root" });
 
     onMounted(() => {
       new Parallax(scene.value, {
@@ -66,14 +61,20 @@ export default defineComponent({
     const { state, dispatch } = useStore();
 
     const onSubmit = () => {
-      dispatch("app/login",loginForm.value)
+      dispatch("app/login", loginForm.value);
+    };
+
+    window.onkeydown = (key: any) => {
+      if (key.key == "Enter") {
+        onSubmit();
+      }
     };
 
     return {
       loginForm,
       scene,
       settings: state.settings,
-      onSubmit
+      onSubmit,
     };
   },
 });
@@ -82,6 +83,7 @@ export default defineComponent({
 <style lang="scss" scoped>
 .home {
   display: flex;
+  min-width: 1000px;
 
   .logo {
     font-family: "FZNHT";
@@ -94,7 +96,8 @@ export default defineComponent({
   height: 100vh;
   width: 65%;
   background: url("~@/assets/background.png");
-  background-size: cover;
+  background-size: auto 100%;
+  background-repeat: no-repeat;
   background-position: center;
 }
 
@@ -115,6 +118,8 @@ export default defineComponent({
       top: 0;
       bottom: 0;
       margin: auto;
+      display: flex;
+      align-items: center;
     }
 
     :deep(.el-input__inner) {

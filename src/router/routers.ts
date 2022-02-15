@@ -36,38 +36,14 @@ export const otherRouters: Array<RouteRecordRaw> = [
         }]
     },
     {
-        path: '/goodsModule',
-        component: Layout,
-        name: 'goodsModule',
-        redirect: '/goods',
-        meta: {
-            title: '商品模块',
-            icon: 'ShoppingBag'
-        },
-        children: [{
-            path: '/goods',
-            name: 'goods',
-            component: _import("goods"),
-            meta: {
-                title: '商品管理',
-                icon: 'ShoppingBag'
-            }
-        },{
-            path: '/goodsEdit',
-            name: 'goodsEdit',
-            component: _import("goodsEdit"),
-            meta: {
-                hidden: true,
-                title: '商品编辑',
-                icon: 'ShoppingBag'
-            }
-        }]
-    },
-    {
         path: '/orderModule',
         component: Layout,
         name: 'orderModule',
         redirect: '/order',
+        meta: {
+            title: '订单模块',
+            icon: 'Tickets'
+        },
         children: [{
             path: '/order',
             name: 'order',
@@ -75,6 +51,15 @@ export const otherRouters: Array<RouteRecordRaw> = [
             meta: {
                 title: '订单管理',
                 icon: 'Tickets'
+            }
+        },{
+            path: '/orderEdit',
+            name: 'orderEdit',
+            component: _import("orderEdit"),
+            meta: {
+                title: '订单编辑',
+                icon: 'Tickets',
+                hidden: true
             }
         }]
     }
