@@ -3,7 +3,7 @@ import { AxiosResponse } from "axios"
 
 // 分页
 export const page = (params:PageParams):Promise<AxiosResponse<PageResult>> => {
-    return request.get("/manage/orderInfo",{
+    return request.get("/manage/orderInfo/page",{
         params
     })
 }

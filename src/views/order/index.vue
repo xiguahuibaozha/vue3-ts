@@ -3,12 +3,12 @@
     <el-form-item label="订单号">
       <el-input v-model="formFilter.orderNo" placeholder="订单号"></el-input>
     </el-form-item>
-    <el-form-item label="商品编号">
+    <!-- <el-form-item label="商品编号">
       <el-input v-model="formFilter.goodsCode" placeholder="商品编号"></el-input>
     </el-form-item>
     <el-form-item label="商品名称">
       <el-input v-model="formFilter.goodsName" placeholder="商品名称"></el-input>
-    </el-form-item>
+    </el-form-item> -->
     <el-form-item label="购买人编号">
       <el-input v-model="formFilter.userId" placeholder="购买人编号"></el-input>
     </el-form-item>
@@ -21,7 +21,7 @@
     <el-form-item label="购买人身份账号">
       <el-input v-model="formFilter.buyCardId" placeholder="购买人身份账号"></el-input>
     </el-form-item>
-    <el-form-item label="购买时间">
+    <!-- <el-form-item label="购买时间">
       <el-date-picker
           v-model="formFilter.buyTime"
           type="datetime"
@@ -29,7 +29,7 @@
           placeholder="购买时间"
       >
       </el-date-picker>
-    </el-form-item>
+    </el-form-item> -->
     <el-form-item>
       <el-button type="primary" @click="submit">查询</el-button>
       <el-button @click="reset">重置</el-button>
